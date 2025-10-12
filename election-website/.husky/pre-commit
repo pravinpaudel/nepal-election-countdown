@@ -1,0 +1,2 @@
+echo "Running pre-commit checks..."
+npx biome check --staged --apply --files-ignore-unknown=true --no-errors-on-unmatched
