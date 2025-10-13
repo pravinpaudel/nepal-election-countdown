@@ -24,12 +24,12 @@ Our team will guide you and support your contributions.
 
 2. **Install dependencies**
    ```bash
-   npm install
+  pnpm install
    ```
 
 3. **Run the app locally**
    ```bash
-   npm start
+   make server 
    ```
 
 ## 🛠️ Tech Stack (Proposed)
