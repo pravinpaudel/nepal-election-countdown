@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import { SubscriberRepository } from "../repositories/subscriberRepository";
 import { sendVerificationEmail, sendWelcomeEmail } from "../lib/email";
+import { SubscribeResponse, VerifyResponse } from "../types/subscriber";
 
 export class SubscriberService {
     private repository: SubscriberRepository;
@@ -22,7 +23,7 @@ export class SubscriberService {
         // Check existing subscriber
         const existingSubscriber = await this.repository.findByEmail(normalizedEmail);
 
-        // If verified & active → Error
+        // If verified & active -> Error
         if (existingSubscriber?.isVerified && existingSubscriber?.isActive) {
             throw new Error("This email is already subscribed to our updates");
         }
@@ -38,7 +39,9 @@ export class SubscriberService {
             return {
                 success: true,
                 message: "Welcome back! Your subscription has been reactivated.",
-                subscriber: updated
+                email: normalizedEmail,
+                isVerified: true,
+                isActive: true
             };
         }
 
@@ -60,7 +63,8 @@ export class SubscriberService {
             return {
                 success: true,
                 message: "Verification email resent! Please check your inbox and verify your email address.",
-                subscriber: updated
+                email: normalizedEmail,
+                isVerified: false
             };
         }
 
@@ -79,7 +83,9 @@ export class SubscriberService {
         return {
             success: true,
             message: "Subscription initiated! Please check your email to verify your address.",
-            subscriber
+            email: normalizedEmail,
+            isVerified: false,
+            isActive: false
         };
     }
 
@@ -105,7 +111,7 @@ export class SubscriberService {
         return {
             success: true,
             message: "Subscriber verified successfully",
-            subscriber: updated
+            isVerified: true
         };
     }
 }
