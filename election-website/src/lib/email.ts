@@ -1,14 +1,98 @@
 /**
- * Email service for sending verification and notification emails
+ * Email service for sending verification and notification emails using SMTP
  * 
- * TODO: Configure with preferred email service: Resend, SendGrid, etc.
+ * 
+ * Configuration via environment variables:
+ * - SMTP_HOST: SMTP server host (e.g., smtp.gmail.com)
+ * - SMTP_PORT: SMTP server port (587 for TLS, 465 for SSL, 25 for unencrypted)
+ * - SMTP_USER: SMTP username (usually your email)
+ * - SMTP_PASS: SMTP password or app-specific password
+ * - SMTP_FROM: From email address
+ * - SMTP_SECURE: "true" for SSL (port 465), "false" for TLS/STARTTLS (port 587)
  */
+// src/lib/email.ts
+import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 
 interface EmailOptions {
   to: string;
   subject: string;
   html: string;
   text?: string;
+}
+
+/**
+ * Create and cache the SMTP transporter
+ * Only created once per process to reuse connections
+ */
+let transporter: Transporter | null = null;
+
+function getTransporter(): Transporter {
+  if (transporter) {
+    return transporter;
+  }
+
+  // For development without SMTP configured, log to console instead
+  const isDevMode = process.env.NODE_ENV === "development" || !process.env.NODE_ENV;
+  const hasSmtpConfig = !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+
+  if (isDevMode && !hasSmtpConfig) {
+    console.warn(
+      "⚠️  SMTP not configured. Emails will be logged to console only."
+    );
+    console.warn(
+      "   Set SMTP_* environment variables to send real emails."
+    );
+    
+    // Return a dummy transporter that logs instead of sending
+    transporter = nodemailer.createTransport({
+      jsonTransport: true,
+    }) as Transporter;
+    
+    // Override sendMail for logging
+    transporter.sendMail = async (mailOptions: any) => {
+      console.log("\n📧 ===== EMAIL (DEVELOPMENT MODE - NOT SENT) =====");
+      console.log("From:", mailOptions.from);
+      console.log("To:", mailOptions.to);
+      console.log("Subject:", mailOptions.subject);
+      console.log("Text:", mailOptions.text || "No text version");
+      console.log("HTML Length:", mailOptions.html?.length || 0, "characters");
+      console.log("================================================\n");
+      return { messageId: "dev-mode-no-email" } as any;
+    };
+    return transporter;
+  }
+
+  // Production or development with SMTP configured
+  const smtpConfig = {
+    host: process.env.SMTP_HOST,
+    port: Number.parseInt(process.env.SMTP_PORT || "587"),
+    secure: process.env.SMTP_SECURE === "true", // true for 465 (SSL), false for 587 (TLS)
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  };
+
+  // Validate required config
+  if (!smtpConfig.host || !smtpConfig.auth.user || !smtpConfig.auth.pass) {
+    throw new Error(
+      "SMTP configuration incomplete. Please set SMTP_HOST, SMTP_USER, and SMTP_PASS environment variables."
+    );
+  }
+
+  transporter = nodemailer.createTransport(smtpConfig);
+
+  // Verify connection on first use
+  transporter.verify((error, success) => {
+    if (error) {
+      console.error("❌ SMTP connection failed:", error);
+    } else {
+      console.log("✅ SMTP server is ready to send emails");
+    }
+  });
+
+  return transporter;
 }
 
 /**
@@ -43,7 +127,7 @@ export async function sendVerificationEmail(
       </head>
       <body>
         <div class="container">
-          <h2>🗳️ Nepal Election Countdown - Verify Your Email</h2>
+          <h2>Nepal Election Countdown - Verify Your Email</h2>
           <p>Thank you for subscribing to election updates!</p>
           <p>Please verify your email address by clicking the button below:</p>
           <a href="${verificationUrl}" class="button">Verify Email Address</a>
@@ -101,7 +185,7 @@ export async function sendWelcomeEmail(email: string): Promise<void> {
       <body>
         <div class="container">
           <div class="header">
-            <h2>🎉 Welcome to Nepal Election Countdown!</h2>
+            <h2>Welcome to Nepal Election Countdown!</h2>
           </div>
           <p>Your email has been successfully verified!</p>
           <p>You'll now receive important updates and notifications about upcoming elections in Nepal.</p>
@@ -138,25 +222,27 @@ Nepal Election Countdown Team
 }
 
 /**
- * Core email sending function
+ * Core email sending function using SMTP
  * 
- * TODO: Implement with email service provider
- * 
+ * Sends email via configured SMTP server or logs to console in development
+ * if SMTP is not configured.
  */
 async function sendEmail(options: EmailOptions): Promise<void> {
-  // For development: Log email instead of sending
-  if (process.env.NODE_ENV === "development") {
-    console.log("\n📧 ===== EMAIL WOULD BE SENT =====");
-    console.log("To:", options.to);
-    console.log("Subject:", options.subject);
-    console.log("Text:", options.text || "No text version");
-    console.log("HTML Length:", options.html.length, "characters");
-    console.log("================================\n");
-    return;
-  }
+  const transporter = getTransporter();
   
-  // For now, throw an error in production to prevent silent failures
-  throw new Error(
-    "Email service not configured. Please set up Resend, SendGrid, or another email provider."
-  );
+  const mailOptions = {
+    from: process.env.SMTP_FROM || process.env.SMTP_USER || "noreply@example.com",
+    to: options.to,
+    subject: options.subject,
+    text: options.text,
+    html: options.html,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("✅ Email sent successfully:", info.messageId);
+  } catch (error) {
+    console.error("❌ Failed to send email:", error);
+    throw new Error(`Email sending failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+  }
 }
