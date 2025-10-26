@@ -12,8 +12,7 @@ export class SubscriberService {
 
     async subscribe(email: string) {
         // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!this.isValidEmail(email)) {
             throw new Error("Invalid email format");
         }
 
@@ -113,5 +112,48 @@ export class SubscriberService {
             message: "Subscriber verified successfully",
             isVerified: true
         };
+    }
+    
+    /**
+     * Unsubscribe email from updates
+     * 
+     * @param email String
+     * @returns A JSON object indicating success status and message
+     * 
+     * @example
+     * {
+     *   success: boolean;
+     *   message: string;
+     * }
+     */
+    async unsubscribe(email: string) {
+        if (!this.isValidEmail(email)) {
+            throw new Error("Invalid email format");
+        }
+
+        const normalizedEmail = email.toLowerCase().trim();
+        const subscriber = await this.repository.findByEmail(normalizedEmail);
+
+        if(subscriber && subscriber.isActive) {
+            await this.repository.updateByEmail(normalizedEmail, {
+                isActive: false,
+                updatedAt: new Date()
+            });
+        }
+
+        return {
+            success: true,
+            message: "You have been unsubscribed successfully.",
+        }
+    }
+
+    /**
+     * Check if email address is valid
+     * @param email String
+     * @returns Boolean
+     */
+    private isValidEmail(email: string): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 }
