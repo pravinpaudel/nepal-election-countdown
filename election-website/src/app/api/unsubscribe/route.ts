@@ -24,10 +24,12 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await subscriberService.unsubscribe(email);
-        return NextResponse.json({ success: true, message: "Unsubscribed successfully" }, { status: 200 });
-    } catch (error: any) {
-        console.error("❌ Error unsubscribing:", error);
-        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+        // return the result from the service so callers can inspect message/success
+        return NextResponse.json(result, { status: 200 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error("❌ Error unsubscribing:", message);
+        return NextResponse.json({ success: false, message }, { status: 500 });
     }
     
 }

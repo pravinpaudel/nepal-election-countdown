@@ -50,7 +50,7 @@ function getTransporter(): Transporter {
     }) as Transporter;
     
     // Override sendMail for logging
-    transporter.sendMail = async (mailOptions: any) => {
+    transporter.sendMail = async (mailOptions: nodemailer.SendMailOptions) => {
       console.log("\n📧 ===== EMAIL (DEVELOPMENT MODE - NOT SENT) =====");
       console.log("From:", mailOptions.from);
       console.log("To:", mailOptions.to);
@@ -58,7 +58,8 @@ function getTransporter(): Transporter {
       console.log("Text:", mailOptions.text || "No text version");
       console.log("HTML Length:", mailOptions.html?.length || 0, "characters");
       console.log("================================================\n");
-      return { messageId: "dev-mode-no-email" } as any;
+      // Return a shape compatible with nodemailer.SentMessageInfo
+      return ({ messageId: "dev-mode-no-email" } as unknown) as nodemailer.SentMessageInfo;
     };
     return transporter;
   }
