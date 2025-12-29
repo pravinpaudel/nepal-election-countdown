@@ -1,0 +1,46 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bannerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#DC2626;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7C3AED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563EB;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="300" rx="24" fill="url(#bannerGrad)"/>
+  
+  <!-- Himalayan mountain range silhouette -->
+  <path d="M0 200 L100 140 L200 160 L300 100 L400 130 L500 80 L600 110 L700 60 L800 100 L900 120 L1000 140 L1100 160 L1200 150 L1200 300 L0 300 Z" fill="white" opacity="0.1"/>
+  
+  <!-- Prayer flags decoration -->
+  <g opacity="0.3">
+    <line x1="100" y1="40" x2="1100" y2="40" stroke="white" stroke-width="2"/>
+    <rect x="150" y="42" width="40" height="30" fill="#DC2626"/>
+    <rect x="250" y="42" width="40" height="30" fill="#3B82F6"/>
+    <rect x="350" y="42" width="40" height="30" fill="#FBBF24"/>
+    <rect x="450" y="42" width="40" height="30" fill="#10B981"/>
+    <rect x="550" y="42" width="40" height="30" fill="white"/>
+    <rect x="650" y="42" width="40" height="30" fill="#DC2626"/>
+    <rect x="750" y="42" width="40" height="30" fill="#3B82F6"/>
+    <rect x="850" y="42" width="40" height="30" fill="#FBBF24"/>
+    <rect x="950" y="42" width="40" height="30" fill="#10B981"/>
+    <rect x="1050" y="42" width="40" height="30" fill="white"/>
+  </g>
+  
+  <!-- Nepal flag pennants in corners -->
+  <path d="M50 100 L80 130 L50 130 Z" fill="white" opacity="0.4"/>
+  <path d="M1150 100 L1180 130 L1150 130 Z" fill="white" opacity="0.4"/>
+  
+  <!-- Main text -->
+  <text x="600" y="140" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">
+    I'M READY TO VOTE
+  </text>
+  <text x="600" y="205" font-family="Arial, sans-serif" font-size="48" fill="white" text-anchor="middle" opacity="0.95">
+    Nepal Election • March 5, 2026
+  </text>
+  
+  <!-- Bottom tagline with Devanagari -->
+  <text x="600" y="260" font-family="Arial, sans-serif" font-size="28" fill="white" text-anchor="middle" opacity="0.85">
+    मेरो मत, मेरो अधिकार • Every Vote Counts
+  </text>
+</svg>

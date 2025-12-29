@@ -105,6 +105,12 @@ export default function HomePage() {
             </div>
             <nav className="flex items-center gap-4" aria-label="Secondary navigation">
               <a 
+                href="/share" 
+                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 rounded-md px-2 py-1"
+              >
+                Share
+              </a>
+              <a 
                 href="#about" 
                 className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 rounded-md px-2 py-1"
               >

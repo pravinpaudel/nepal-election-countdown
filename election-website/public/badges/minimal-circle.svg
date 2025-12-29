@@ -1,0 +1,38 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background -->
+  <defs>
+    <linearGradient id="minimalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F8FAFC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E2E8F0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <circle cx="256" cy="256" r="256" fill="url(#minimalGrad)"/>
+  
+  <!-- Colored rings inspired by Nepal flag -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#DC2626" stroke-width="6"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#2563EB" stroke-width="6"/>
+  
+  <!-- Stylized Nepal flag pennant -->
+  <g>
+    <path d="M256 110 L210 180 L302 180 Z" fill="#DC2626"/>
+    <path d="M256 130 L220 180 L292 180 Z" fill="#2563EB"/>
+    <!-- Moon and star -->
+    <circle cx="256" cy="155" r="8" fill="white"/>
+    <path d="M256 145 L258 150 L263 150 L259 153 L260 158 L256 155 L252 158 L253 153 L249 150 L254 150 Z" fill="white" opacity="0.9"/>
+  </g>
+  
+  <!-- Mountain peaks at bottom -->
+  <path d="M100 280 L140 240 L180 260 L220 220 L256 240 L292 220 L332 260 L372 240 L412 280" stroke="#64748B" stroke-width="3" fill="none" opacity="0.6"/>
+  
+  <!-- Text -->
+  <text x="256" y="330" font-family="Arial, sans-serif" font-size="46" font-weight="bold" fill="#1E293B" text-anchor="middle">
+    VOTE
+  </text>
+  <text x="256" y="375" font-family="Arial, sans-serif" font-size="32" font-weight="600" fill="#64748B" text-anchor="middle">
+    MARCH 5
+  </text>
+  <text x="256" y="415" font-family="Arial, sans-serif" font-size="32" font-weight="600" fill="#64748B" text-anchor="middle">
+    2026
+  </text>
+</svg>
