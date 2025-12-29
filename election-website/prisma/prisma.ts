@@ -1,5 +1,19 @@
-import { PrismaClient } from '../src/generated/prisma/client'
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient()
+type GlobalPrisma = typeof globalThis & { prisma?: PrismaClient };
 
-export { prisma }
+const globalForPrisma = globalThis as GlobalPrisma;
+
+// Reuse the Prisma client across hot reloads and connect once at startup.
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (!globalForPrisma.prisma) {
+	prisma
+		.$connect()
+		.then(() => console.log("✅[prisma] Connected to database"))
+		.catch((err) => console.error("❌[prisma] Failed to connect to database", err));
+
+	globalForPrisma.prisma = prisma;
+}
+
+export { prisma };

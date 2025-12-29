@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "prepare": "cd .. && husky election-website/.husky"
+    "prepare": "cd .. && husky election-website/.husky",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",
