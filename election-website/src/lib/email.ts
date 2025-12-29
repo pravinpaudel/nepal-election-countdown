@@ -56,7 +56,7 @@ function getTransporter(): Transporter {
       console.log("To:", mailOptions.to);
       console.log("Subject:", mailOptions.subject);
       console.log("Text:", mailOptions.text || "No text version");
-      console.log("HTML Length:", mailOptions.html?.length || 0, "characters");
+      console.log("HTML Length:", mailOptions.html || 0, "characters");
       console.log("================================================\n");
       // Return a shape compatible with nodemailer.SentMessageInfo
       return ({ messageId: "dev-mode-no-email" } as unknown) as nodemailer.SentMessageInfo;
